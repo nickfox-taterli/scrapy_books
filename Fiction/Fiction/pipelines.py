@@ -28,6 +28,9 @@ class FictionPipelineBooks(object):
 
     def process_item(self, item, spider):
 
+        if item['chapter_name'] is None:
+            item['chapter_name'] = ''
+
         self.writer.writerow([item['id_primary'], item['id_subset'],
                               item['title'].replace(',', '，').replace('"', '').replace('\r\n', ''),
                               item['chapter_name'].replace(',', '，').replace('"', '').replace('\r\n', ''),
