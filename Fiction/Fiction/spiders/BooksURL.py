@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import socket
-import redis
-from Fiction.items import BooksItem
+from Fiction.items import BooksUrlItem
 from scrapy.http import Request
-from scrapy.utils.log import configure_logging
+import lzma
+import shutil
+import os
 
 class BooksSpider(scrapy.Spider):
-    name = 'Books'
+    name = 'BooksURL'
     allowed_domains = ['69shu.com']
-
-    db = redis.Redis(db=1)
 
     # 书目录Index
     def start_requests(self):
@@ -22,9 +20,9 @@ class BooksSpider(scrapy.Spider):
             '/html/body/div[2]/div[3]/div/div[2]/div/div/div/a[14]/text()').extract()[0])
         book_urls = response.xpath(
             '//*[@id="content"]/div/div[2]/div/ul/li/span[3]/a/@href').extract()
-
-        for book_url in book_urls:
-            yield Request(book_url, callback=self.parse_read)
+        if 'allvisit_1.htm' in response.url:
+            for book_url in book_urls:
+                yield scrapy.Request(book_url, callback=self.parse_read)
         for num in range(1, max_page + 1):
             yield scrapy.Request('https://www.69shu.com/allvisit_' + str(num) + '.htm', callback=self.parse)
 
@@ -33,7 +31,7 @@ class BooksSpider(scrapy.Spider):
         book_urls = response.xpath(
             '//*[@id="content"]/div/div[2]/div/ul/li/span[3]/a/@href').extract()
         for book_url in book_urls:
-            if '/230.htm' not in book_url:
+            if '/230.htm' not in response.url:
                 yield Request(book_url, callback=self.parse_read)
 
     # 获取马上阅读按钮的URL，进入章节目录
@@ -46,38 +44,24 @@ class BooksSpider(scrapy.Spider):
     def parse_chapter(self, response):
         chapter_urls = response.xpath(
             '/html/body/div[2]/div[4]/ul/li/a/@href').extract()
+
         for chapter_url in chapter_urls:
             if "newmessage" not in chapter_url:
-               # 去重发生时机(查询去重,写入要用PIPELINE)
-                uuid = chapter_url.split(
-                    '/')[4] + '-' + chapter_url.split('/')[5]
-                if self.db.hexists('books', uuid) == False:
-                    yield Request(chapter_url, callback=self.parse_content)
+                if '/230/' not in response.url:
+                    item = BooksUrlItem()
+                    item['url'] = chapter_url
+                    yield item
 
-    # 获取小说名字,章节的名字和内容
-    def parse_content(self, response):
+    def closed(self, reason):
+        stats = self.crawler.stats.get_stats()
 
-        try:
-            # 小说名字
-            title = response.xpath(
-                '/html/body/div[2]/div[2]/div[1]/a[3]/text()').extract_first()
-            # 小说章节名字
-            chapter_name = response.xpath(
-                '/html/body/div[2]/table/tbody/tr/td/h1/text()').extract_first()
-            # 小说章节内容
-            chapter_content = response.xpath(
-                '/html/body/div[2]/table/tbody/tr/td/div[1]/text()').extract()
-            chapter_content_full = ''
+        os.remove('/var/www/html/BooksURL.csv.xz')
 
-            item = BooksItem()
-            item['id_primary'] = response.url.split('/')[4]
-            item['id_subset'] = response.url.split('/')[5]
-            item['title'] = title
-            item['chapter_name'] = chapter_name
-            item['chapter_content'] = chapter_content_full.join(
-                chapter_content)
+        with open('/root/code/Fiction/BooksURL.csv', 'rb') as input:
+            with lzma.open(filename='/var/www/html/BooksURL.csv.xz', mode='wb', preset=9 | lzma.PRESET_EXTREME) as output:
+                shutil.copyfileobj(input, output)
 
-            yield item
+        os.remove('/root/code/Fiction/BooksURL.csv')
 
-        except:
-            pass
+        with open('stats.log', 'a') as f:
+            f.write(stats['finish_time'].strftime('%Y-%m-%d %H:%M:%S') + ' 采集章节总数: ' + str(stats['item_scraped_count']) + '\n')

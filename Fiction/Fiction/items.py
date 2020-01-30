@@ -13,6 +13,10 @@ class FictionItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
+class BooksUrlItem(scrapy.Item):
+    url = scrapy.Field()  # 小说URL
+    pass
+
 class BooksItem(scrapy.Item):
     id_primary = scrapy.Field()  # 主ID
     id_subset = scrapy.Field()  # 从ID
