@@ -19,7 +19,7 @@ class FictionPipelineBooks(object):
 
     def __init__(self):
         #生成时间基准文件名
-        self.fn = '/root/code/Fiction/__store__/' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + '.csv'
+        self.fn = '/root/scrapy_books/Fiction/__store__/' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + '.csv'
         self.db = redis.Redis(db=1)
         # 打开(追加)文件
         self.fw = open(self.fn, 'a', encoding='utf8', newline='')
