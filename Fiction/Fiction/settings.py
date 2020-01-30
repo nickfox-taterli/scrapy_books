@@ -33,10 +33,10 @@ ROBOTSTXT_OBEY = True
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
+TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
@@ -64,9 +64,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'Fiction.pipelines.FictionPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'Fiction.pipelines.FictionPipelineBooks':100,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -88,3 +88,20 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+RETRY_HTTP_CODES = [500, 502, 503, 504, 520, 522, 524, 408, 429]
+
+RETRY_ENABLED = True
+RETRY_TIMES = 1000
+
+LOG_LEVEL = "INFO"
+LOGSTATS_INTERVAL = 5 * 1.0
+
+# 指定个数停止
+CLOSESPIDER_ITEMCOUNT = 0
+# 指定秒数后停止
+CLOSESPIDER_TIMEOUT = 5 * 3600
+# 指定页数后停止
+CLOSESPIDER_PAGECOUNT = 0
+# 指定错误个数后停止
+CLOSESPIDER_ERRORCOUNT = 0
