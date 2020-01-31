@@ -11,6 +11,15 @@ import time
 import lzma
 import shutil
 
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from apiclient.http import MediaFileUpload
+
+import logging
+
 class FictionPipeline(object):
     def process_item(self, item, spider):
         return item
@@ -25,6 +34,42 @@ class FictionPipelineBooks(object):
         self.fw = open(self.fn, 'a', encoding='utf8', newline='')
         # CSV写法
         self.writer = csv.writer(self.fw)
+
+    def upload_item(self):
+        # If modifying these scopes, delete the file token.google.
+        SCOPES = ['https://www.googleapis.com/auth/drive']
+
+        creds = None
+        # The file token.google stores the user's access and refresh tokens, and is
+        # created automatically when the authorization flow completes for the first
+        # time.
+        if os.path.exists('token.google'):
+            with open('token.google', 'rb') as token:
+                creds = pickle.load(token)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    'credentials.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.google', 'wb') as token:
+                pickle.dump(creds, token)
+
+        service = build('drive', 'v3', credentials=creds,cache_discovery = False)
+
+        file_metadata = {'name': os.path.basename(self.fn),
+                        'mimeType': 'text/csv','parents': ['1W14BJa9PoqPP1K4C-WhOhu9VShKMsrdF']}
+        media = MediaFileUpload(self.fn,
+                                mimetype='text/csv')
+        file = service.files().create(body=file_metadata,
+                                    media_body=media,
+                                    fields='id').execute()
+
+        logging.log(logging.INFO, 'Upload to GDrive File ID: %s' % file.get('id'))
+
 
     def process_item(self, item, spider):
 
@@ -43,6 +88,9 @@ class FictionPipelineBooks(object):
     def close_spider(self, spider):
         # 关闭爬虫时顺便将文件保存退出
         self.fw.close()
+
+        self.upload_item()
+
         with open(self.fn, 'rb') as input:
             with lzma.open(filename=self.fn + '.xz', mode='wb', preset=9 | lzma.PRESET_EXTREME) as output:
                 shutil.copyfileobj(input, output)
