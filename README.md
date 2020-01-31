@@ -20,7 +20,7 @@
 部分数据:
 
 > * CSV文件适用于MySQL导入,无标题,不需要IGNORE.
-> * dump.rdb是Redis数据库快照,记录最后一次爬取结果.
+> * CSV文件不定时增量更新.
 > * 储存格式:`id_primary` `id_subset` `title` `chapter_name` `chapter_content`
 > * 下载地址:[OneDrive网盘][1]
 
