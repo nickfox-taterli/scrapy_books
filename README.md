@@ -24,5 +24,32 @@
 > * 储存格式:`id_primary` `id_subset` `title` `chapter_name` `chapter_content`
 > * 下载地址:[OneDrive网盘][1]
 
+MySQL导入参考:
+
+```mysql
+CREATE TABLE `scrapy` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `id_primary` INT NOT NULL,
+    `id_subset` INT NOT NULL,
+    `title` VARCHAR(200) NOT NULL DEFAULT '',
+    `chapter_name` VARCHAR(200),
+    `chapter_content` MEDIUMTEXT,
+    `created_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (`id`),
+    INDEX `id_subset` (`id_subset`),
+    INDEX `id_primary` (`id_primary`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+```mysql
+LOAD DATA LOCAL INFILE './yyyy-mm-dd-hh-mm-ss.csv'
+IGNORE INTO TABLE scrapy
+CHARACTER SET utf8mb4 FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\r\n'
+IGNORE 0 LINES 
+(`id_primary`,`id_subset`,`title`,`chapter_name`,`chapter_content`)
+SET chapter_name = nullif(chapter_name,'无标题');
+```
+
 
   [1]: https://hcmcou-my.sharepoint.com/:f:/g/personal/phuong_ntn9_oude_edu_vn/EgV3SkupH7FBgwuEXZP2BYEBtex7HuhwkP275vSin-U0ww?e=2FKFb8 "OneDrive"
