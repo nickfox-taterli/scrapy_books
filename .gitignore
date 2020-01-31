@@ -3,3 +3,4 @@ __store__
 
 credentials.json
 token.google
+startup.sh
