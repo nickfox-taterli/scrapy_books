@@ -10,6 +10,7 @@ import os
 import time
 import lzma
 import shutil
+import socket
 
 import pickle
 import os.path
@@ -34,6 +35,8 @@ class FictionPipelineBooks(object):
         self.fw = open(self.fn, 'a', encoding='utf8', newline='')
         # CSV写法
         self.writer = csv.writer(self.fw)
+
+        socket.setdefaulttimeout(1800)
 
     def upload_item(self):
         # If modifying these scopes, delete the file token.google.
