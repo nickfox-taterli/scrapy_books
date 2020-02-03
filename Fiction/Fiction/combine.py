@@ -6,6 +6,9 @@ from google.auth.transport.requests import Request
 from googleapiclient.http import MediaIoBaseDownload
 import io
 import time
+import socket
+
+socket.setdefaulttimeout(1800)
 
 # If modifying these scopes, delete the file token.google.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
