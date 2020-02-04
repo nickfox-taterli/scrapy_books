@@ -55,13 +55,5 @@ class BooksSpider(scrapy.Spider):
     def closed(self, reason):
         stats = self.crawler.stats.get_stats()
 
-        os.remove('/var/www/html/BooksURL.csv.xz')
-
-        with open('/root/code/Fiction/BooksURL.csv', 'rb') as input:
-            with lzma.open(filename='/var/www/html/BooksURL.csv.xz', mode='wb', preset=9 | lzma.PRESET_EXTREME) as output:
-                shutil.copyfileobj(input, output)
-
-        os.remove('/root/code/Fiction/BooksURL.csv')
-
-        with open('stats.log', 'a') as f:
+        with open('/root/scrapy_books/Fiction/Fiction/__store__/stats.log', 'a') as f:
             f.write(stats['finish_time'].strftime('%Y-%m-%d %H:%M:%S') + ' 采集章节总数: ' + str(stats['item_scraped_count']) + '\n')
