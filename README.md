@@ -1,5 +1,6 @@
 # 小说爬虫(主要记录)
 
+![](https://raw.githubusercontent.com/nickfox-taterli/scrapy_books/master/Fiction/images/scrapinghub.png)
 
 ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=1) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=2) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=3)
 
@@ -27,7 +28,7 @@
 > * 采集耗时:< 300分钟
 > * 上传耗时:< 1分钟
 > * 压缩耗时:< 3 分钟
-> * 节点需求:< 1 Free Forever Scrapy Cloud Unit
+> * 节点需求:= 1 Free Forever Scrapy Cloud Unit
 > * Redis服务器内存需求:< 2GB
 > * 流量消耗:< 1GB
 
