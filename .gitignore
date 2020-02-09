@@ -1,5 +1,7 @@
 __pycache__
 __store__
+project.egg-info
+build/
 
 credentials.json
 token.google
