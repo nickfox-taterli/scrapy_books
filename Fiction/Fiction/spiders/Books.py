@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import socket
 import redis
 from Fiction.items import BooksItem
 from scrapy.http import Request
-from scrapy.utils.log import configure_logging
 
 class BooksSpider(scrapy.Spider):
     name = 'Books'
@@ -84,6 +82,6 @@ class BooksSpider(scrapy.Spider):
                 chapter_content)
 
             yield item
-
         except:
+            # 这里最好分开处理,通常是某些内容出现错误,部分可以人工后处理(未实现)
             pass

@@ -15,7 +15,6 @@ class FictionItem(scrapy.Item):
 
 class BooksUrlItem(scrapy.Item):
     url = scrapy.Field()  # 小说URL
-    pass
 
 class BooksItem(scrapy.Item):
     id_primary = scrapy.Field()  # 主ID
@@ -23,4 +22,3 @@ class BooksItem(scrapy.Item):
     title = scrapy.Field()  # 小说名字
     chapter_name = scrapy.Field()  # 小说章节名字
     chapter_content = scrapy.Field()  # 小说章节内容
-    pass

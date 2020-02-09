@@ -2,9 +2,6 @@
 import scrapy
 from Fiction.items import BooksUrlItem
 from scrapy.http import Request
-import lzma
-import shutil
-import os
 
 class BooksSpider(scrapy.Spider):
     name = 'BooksURL'
