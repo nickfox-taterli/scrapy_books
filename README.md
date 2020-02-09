@@ -1,5 +1,8 @@
 # 小说爬虫(主要记录)
 
+
+![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=1) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=2) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=3)
+
 ------
 
 主要解决问题和实现目的：
@@ -10,6 +13,7 @@
 > * 可以粗略估算数据量
 > * 解决一些采集中的BUG
 > * 解决上传超时问题
+> * 实时数据量参照顶部状态条.(每次采集完成会更新)
 
 遇到一些问题:
 
@@ -18,14 +22,14 @@
 > * 有些章节标题竟然是空白的.
 > * 如果一次性采集很久,可能文件很大,不利于导入各类数据库或者硬盘保存.
 
-性能评估(AWS Fargate 于增量爬取状态下):
+性能评估(ScrapingHub于增量爬取状态下):
 
-> * 采集耗时:~30分钟
+> * 采集耗时:< 300分钟
 > * 上传耗时:< 1分钟
-> * 压缩耗时:3 分钟
-> * 内存需求:< 256M
-> * Redis服务器内存需求: 1.5G
-> * 流量消耗:< 10M
+> * 压缩耗时:< 3 分钟
+> * 节点需求:< 1 Free Forever Scrapy Cloud Unit
+> * Redis服务器内存需求:< 2GB
+> * 流量消耗:< 1GB
 
 数据打包:
 
