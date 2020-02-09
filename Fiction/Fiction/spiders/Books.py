@@ -12,6 +12,12 @@ class BooksSpider(scrapy.Spider):
 
     db = redis.Redis(db=1)
 
+    custom_settings = {
+        'ITEM_PIPELINES':{
+            'Fiction.pipelines.FictionPipelineBooks':100,
+        }
+    }
+
     # 书目录Index
     def start_requests(self):
         yield scrapy.Request('https://www.69shu.com/allvisit_1.htm', callback=self.start_requests_list)
