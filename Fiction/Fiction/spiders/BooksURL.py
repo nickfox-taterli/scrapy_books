@@ -49,8 +49,3 @@ class BooksSpider(scrapy.Spider):
                     item['url'] = chapter_url
                     yield item
 
-    def closed(self, reason):
-        stats = self.crawler.stats.get_stats()
-
-        with open('/root/scrapy_books/Fiction/Fiction/__store__/stats.log', 'a') as f:
-            f.write(stats['finish_time'].strftime('%Y-%m-%d %H:%M:%S') + ' 采集章节总数: ' + str(stats['item_scraped_count']) + '\n')
