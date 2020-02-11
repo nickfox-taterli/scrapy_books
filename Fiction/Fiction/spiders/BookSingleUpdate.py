@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import redis
 from Fiction.items import BooksItem
 from scrapy.http import Request
 
 class BooksSpider(scrapy.Spider):
-    name = 'BookSingle'
+    name = 'BookSingleUpdate'
     allowed_domains = ['69shu.com']
     
+    db = redis.Redis(db=1)
+
     custom_settings = {
         'ITEM_PIPELINES':{
-            'Fiction.pipelines.SingleBookPipelineBooks':100,
+            'Fiction.pipelines.SingleBookUpdatePipelineBooks':100,
         }
     }
 
@@ -29,8 +32,10 @@ class BooksSpider(scrapy.Spider):
             '/html/body/div[2]/div[4]/ul/li/a/@href').extract()
         for chapter_url in chapter_urls:
             if "newmessage" not in chapter_url:
-                # 去重发生时机(查询去重,写入要用PIPELINE)
-                yield Request(chapter_url, callback=self.parse_content)
+                uuid = chapter_url.split(
+                    '/')[4] + '-' + chapter_url.split('/')[5]
+                if self.db.hexists('books_single', uuid) == False:
+                    yield Request(chapter_url, callback=self.parse_content)
 
     # 获取小说名字,章节的名字和内容
     def parse_content(self, response):
