@@ -196,44 +196,44 @@ class SingleBookUpdatePipelineBooks(object):
     def close_spider(self, spider):
         # 关闭爬虫时顺便将文件保存退出
         self.fw.close()
-        con = sqlite3.connect(":memory:")
-        cur = con.cursor()
-        cur.execute(
-            "CREATE TABLE t (ID INT PRIMARY KEY NOT NULL, CHAPTER_NAME TEXT NOT NULL,CHAPTER_CONTENT TEXT NOT NULL);")
+        if 'item_scraped_count' in spider.crawler.stats.get_stats():
+            con = sqlite3.connect(":memory:")
+            cur = con.cursor()
+            cur.execute(
+                "CREATE TABLE t (ID INT PRIMARY KEY NOT NULL, CHAPTER_NAME TEXT NOT NULL,CHAPTER_CONTENT TEXT NOT NULL);")
 
-        with open(self.fn, 'r') as f:
-            reader = csv.reader(f)
-            for field in reader:
-                cur.execute("INSERT INTO t (ID, CHAPTER_NAME, CHAPTER_CONTENT) VALUES (?, ?, ?);",
-                            (field[1], field[3], field[4]))
-            con.commit()
-            cursor = con.execute(
-                "SELECT CHAPTER_NAME,CHAPTER_CONTENT FROM t ORDER BY ID ASC LIMIT 2")
-            fo = open(self.title + '.txt', "w")
-            for row in cursor:
-                fo.write(row[0] + '\n')
-                fo.write(row[1] + '\n')
+            with open(self.fn, 'r') as f:
+                reader = csv.reader(f)
+                for field in reader:
+                    cur.execute("INSERT INTO t (ID, CHAPTER_NAME, CHAPTER_CONTENT) VALUES (?, ?, ?);",
+                                (field[1], field[3], field[4]))
+                con.commit()
+                cursor = con.execute(
+                    "SELECT CHAPTER_NAME,CHAPTER_CONTENT FROM t ORDER BY ID ASC LIMIT 2")
+                fo = open(self.title + '.txt', "w")
+                for row in cursor:
+                    fo.write(row[0] + '\n')
+                    fo.write(row[1] + '\n')
 
-            fo.close()
+                fo.close()
 
-            fo = open(self.title + '.txt', "r")
+                fo = open(self.title + '.txt', "r")
 
-            payload = dict()
-            payload['personalizations'] = [
-                {'to': [{'email': 'admin@xxx.com'}]}]
-            payload['from'] = {
-                'email': 'admin@xxx.com', 'name': '小说采集机器人'}
-            payload['subject'] = '小说更新'
-            payload['content'] = [{'type': 'text/plain', 'value': fo.read()}]
+                payload = dict()
+                payload['personalizations'] = [
+                    {'to': [{'email': 'admin@xxx.com'}]}]
+                payload['from'] = {
+                    'email': 'admin@xxx.com', 'name': '小说采集机器人'}
+                payload['subject'] = '小说更新'
+                payload['content'] = [{'type': 'text/plain', 'value': fo.read()}]
 
-            logging.log(logging.INFO, '小说更新已经投递到邮箱.')
+                logging.log(logging.INFO, '小说更新已经投递到邮箱.')
 
-            requests.request("POST", "https://api.sendgrid.com/v3/mail/send",
-                             headers={'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer x'},
-                             data=json.dumps(payload))
+                requests.request("POST", "https://api.sendgrid.com/v3/mail/send",
+                                headers={'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer x'},
+                                data=json.dumps(payload))
 
-            os.remove(self.title + '.txt')
-            con.close()
-
+                os.remove(self.title + '.txt')
+                con.close()
         os.remove(self.fn)
