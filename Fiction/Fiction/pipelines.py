@@ -11,6 +11,7 @@ import time
 import lzma
 import shutil
 import socket
+import sqlite3
 
 import pickle
 import os.path
@@ -98,3 +99,52 @@ class FictionPipelineBooks(object):
                 shutil.copyfileobj(input_fn, output)
 
         os.remove(self.fn)
+
+
+class SingleBookPipelineBooks(object):
+
+    def __init__(self):
+        # 生成时间基准文件名
+        self.fn = '/root/scrapy_books/Fiction/Fiction/__store__/' + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + '.csv'
+        # 打开(追加)文件
+        self.fw = open(self.fn, 'a', encoding='utf8', newline='')
+        # CSV写法
+        self.writer = csv.writer(self.fw)
+        self.title = ''
+
+    def process_item(self, item, spider):
+
+        if item['chapter_name'] is None:
+            item['chapter_name'] = ''
+
+        self.title = item['title']
+
+        self.writer.writerow([item['id_primary'], item['id_subset'],
+                              item['title'],
+                              item['chapter_name'],
+                              item['chapter_content']])
+
+        return item
+
+    def close_spider(self, spider):
+        # 关闭爬虫时顺便将文件保存退出
+        self.fw.close()
+        con = sqlite3.connect(":memory:")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE t (ID INT PRIMARY KEY NOT NULL, CHAPTER_NAME TEXT NOT NULL,CHAPTER_CONTENT TEXT NOT NULL);")
+
+        with open(self.fn,'r') as f:
+            reader = csv.reader(f)
+            for field in reader:
+                cur.execute("INSERT INTO t (ID, CHAPTER_NAME, CHAPTER_CONTENT) VALUES (?, ?, ?);", (field[1],field[3],field[4]))
+            con.commit()
+            cursor = con.execute("SELECT CHAPTER_NAME,CHAPTER_CONTENT FROM t ORDER BY ID ASC")
+            fo = open(self.title + '.txt', "w")
+            for row in cursor:
+                fo.write(row[0] + '\n')
+                fo.write(row[1] + '\n')
+
+            con.close()
+        
+        os.remove(self.fn)
+        
