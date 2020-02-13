@@ -2,7 +2,7 @@
 
 ![](https://raw.githubusercontent.com/nickfox-taterli/scrapy_books/master/Fiction/images/scrapinghub.png)
 
-![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=1) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=2) ![](https://img.shields.io/endpoint?url=https://service-m6i4mjmc-1259425397.usw.apigw.tencentcs.com/release/scrapinghub?api=3)
+![](https://img.shields.io/endpoint?url=https://api.jsonbin.io/b/5e44f27ed18e40166177cd58/latest) ![](https://img.shields.io/endpoint?url=https://api.jsonbin.io/b/5e44f278817c5f163f9bb47e/latest) ![](https://img.shields.io/endpoint?url=https://api.jsonbin.io/b/5e44f271d18e40166177cd52/latest)
 
 ------
 
