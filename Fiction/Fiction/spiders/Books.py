@@ -4,15 +4,24 @@ import redis
 from Fiction.items import BooksItem
 from scrapy.http import Request
 
+import logging
+from logdna import LogDNAHandler
+from scrapy.utils.log import configure_logging
+from scrapy.utils.project import get_project_settings
+
 class BooksSpider(scrapy.Spider):
     name = 'Books'
     allowed_domains = ['69shu.com']
 
     db = redis.Redis(db=1)
 
+    logdna_fn = LogDNAHandler(get_project_settings()['LOGDNA_KEY'], {
+                              "index_meta": True, "tags": [name]})
+    logging.getLogger().addHandler(logdna_fn)
+
     custom_settings = {
-        'ITEM_PIPELINES':{
-            'Fiction.pipelines.FictionPipelineBooks':100,
+        'ITEM_PIPELINES': {
+            'Fiction.pipelines.FictionPipelineBooks': 100,
         }
     }
 

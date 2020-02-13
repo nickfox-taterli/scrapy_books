@@ -9,6 +9,8 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import os
+
 BOT_NAME = 'Fiction'
 
 SPIDER_MODULES = ['Fiction.spiders']
@@ -105,3 +107,6 @@ CLOSESPIDER_ITEMCOUNT = 0
 CLOSESPIDER_PAGECOUNT = 0
 # 指定错误个数后停止
 CLOSESPIDER_ERRORCOUNT = 0
+
+# 日志上报密钥(从环境变量获取)
+LOGDNA_KEY = os.getenv('LOGDNA_KEY')
