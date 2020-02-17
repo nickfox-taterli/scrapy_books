@@ -72,4 +72,4 @@ SET chapter_name = nullif(chapter_name,'无标题');
 ```
 
 
-  [1]: https://hcmcou-my.sharepoint.com/:f:/g/personal/phuong_ntn9_oude_edu_vn/EgV3SkupH7FBgwuEXZP2BYEBtex7HuhwkP275vSin-U0ww?e=2FKFb8 "OneDrive"
+  [1]: http://www.edufree.me/%E5%B0%8F%E8%AF%B4%E9%87%87%E9%9B%86 "OneDrive"
