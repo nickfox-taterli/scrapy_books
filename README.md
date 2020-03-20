@@ -1,3 +1,5 @@
+**因某些特殊原因,本项目停止.**
+
 # 小说爬虫(主要记录)
 
 ![](https://raw.githubusercontent.com/nickfox-taterli/scrapy_books/master/Fiction/images/scrapinghub.png)
