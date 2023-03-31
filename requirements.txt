@@ -1,5 +1,5 @@
 google_auth_oauthlib==0.4.1
-redis==3.3.11
+redis==4.4.4
 Scrapy==1.8.0
 google_api_python_client==1.7.11
 protobuf==3.11.2
